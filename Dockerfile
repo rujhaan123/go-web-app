@@ -1,5 +1,5 @@
 # Stage 1: Build the Go binary
-FROM golang:1.22 as base
+FROM golang:1.22 AS builder
 
 WORKDIR /app
 
@@ -8,19 +8,20 @@ RUN go mod download
 
 COPY . .
 
-# Build the binary for arm64 architecture
-RUN GOOS=linux GOARCH=arm64 go build -o main .
+# Build the binary for ARM64
+RUN GOARCH=arm64 GOOS=linux go build -o main .
 
-# Stage 2: Use a minimal base image (Distroless)
-FROM gcr.io/distroless/base
+# Stage 2: Use Ubuntu for debugging
+FROM ubuntu:22.04
 
-# Copy the binary from the previous stage
-COPY --from=base /app/main .
+# Install necessary tools for debugging
+RUN apt-get update && apt-get install -y file
 
-# Copy static content if needed (ensure this path exists)
-COPY --from=base /app/static ./static
+# Copy the binary from the builder stage
+COPY --from=builder /app/main /app/main
 
-EXPOSE 8080
+# Set the working directory
+WORKDIR /app
 
-# Run the binary
+# Run the binary to check for execution
 CMD ["./main"]

@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
       - name: go-web-app
-        image: rujhaanb807/devopsify:v2
+        image: rujhaanb807/devopsify:debug-ubuntu
         ports:
         - containerPort: 8080

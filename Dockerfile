@@ -8,6 +8,9 @@ RUN go mod download
 
 COPY . .
 
+# Build the binary for the correct architecture
+RUN GOARCH=amd64 GOOS=linux go build -o main .
+
 RUN go build -o main .
 
 #FInal stage - Distroless image -minimalistic Docker images that contain only the essential components needed to run your application. Unlike traditional container images, which include a full operating system (like Debian or Ubuntu)

@@ -20,3 +20,5 @@ spec:
         image: rujhaanb807/devopsify:v1
         ports:
         - containerPort: 8080
+      imagePullSecrets:
+      - name: myregistrysecret

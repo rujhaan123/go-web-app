@@ -9,7 +9,7 @@ RUN go mod download
 COPY . .
 
 # Build the binary for the correct architecture
-RUN GOARCH=amd64 GOOS=linux go build -o main .
+RUN GOOS=linux GOARCH=arm64 go build -o main .
 
 RUN go build -o main .
 

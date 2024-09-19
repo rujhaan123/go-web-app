@@ -1,27 +1,35 @@
-# Stage 1: Build the Go binary
-FROM golang:1.22 AS builder
+# Containerize the go application that we have created
+# This is the Dockerfile that we will use to build the image
+# and run the container
 
+# Start with a base image
+FROM  --platform=linux/arm64 golang:1.22 as base
+
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY go.mod .
+# Copy the go.mod and go.sum files to the working directory
+COPY go.mod ./
+
+# Download all the dependencies
 RUN go mod download
 
+# Copy the source code to the working directory
 COPY . .
 
-# Build the binary for ARM64
-RUN GOARCH=arm64 GOOS=linux go build -o main .
+# Build the application
+RUN go build -o main .
 
-# Stage 2: Use Ubuntu for debugging
-FROM ubuntu:22.04
+#######################################################
+# Reduce the image size using multi-stage builds
+# We will use a distroless image to run the application
+FROM gcr.io/distroless/base
 
-# Install necessary tools for debugging
-RUN apt-get update && apt-get install -y file
-
-# Copy the binary from the builder stage
-COPY --from=builder /app/main .
+# Copy the binary from the previous stage
+COPY --from=base /app/main .
 
 # Copy the static files from the previous stage
-COPY --from=builder /app/static ./static
+COPY --from=base /app/static ./static
 
 # Expose the port on which the application will run
 EXPOSE 8080

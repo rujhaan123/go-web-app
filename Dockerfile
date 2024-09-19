@@ -18,10 +18,13 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y file
 
 # Copy the binary from the builder stage
-COPY --from=builder /app/main /app/main
+COPY --from=builder /app/main .
 
-# Set the working directory
-WORKDIR /app
+# Copy the static files from the previous stage
+COPY --from=builder /app/static ./static
 
-# Run the binary to check for execution
+# Expose the port on which the application will run
+EXPOSE 8080
+
+# Command to run the application
 CMD ["./main"]

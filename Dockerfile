@@ -1,4 +1,4 @@
-# Containerize the go application that we have created
+# Containerize the Go application that we have created
 # This is the Dockerfile that we will use to build the image
 # and run the container
 
@@ -22,8 +22,8 @@ RUN go build -o main .
 
 #######################################################
 # Reduce the image size using multi-stage builds
-# We will use a distroless image to run the application
-FROM gcr.io/distroless/base
+# We will use an Alpine image to run the application
+FROM arm64v8/alpine:latest
 
 # Copy the binary from the previous stage
 COPY --from=base /app/main .

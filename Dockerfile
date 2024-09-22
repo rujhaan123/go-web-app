@@ -3,10 +3,13 @@
 # and run the container
 
 # Start with a base image
-FROM golang:1.22 AS base
+FROM --platform=linux/arm64 golang:1.22 AS base
 
 # Set the working directory inside the container
 WORKDIR /app
+
+# Set the target architecture
+ENV GOARCH=arm64
 
 # Copy the go.mod and go.sum files to the working directory
 COPY go.mod ./
@@ -23,7 +26,7 @@ RUN go build -o main .
 #######################################################
 # Reduce the image size using multi-stage builds
 # We will use an Alpine image to run the application
-FROM arm64v8/alpine:latest
+FROM --platform=linux/arm64 arm64v8/alpine:latest
 
 # Copy the binary from the previous stage
 COPY --from=base /app/main .

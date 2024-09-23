@@ -9,7 +9,7 @@ image:
   repository: rujhaanb807/devopsify
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "10994795270"
+  tag: "10999229829"
 
 ingress:
   enabled: false
